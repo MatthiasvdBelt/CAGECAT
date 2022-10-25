@@ -3,6 +3,7 @@
 Author: Matthias van den Belt
 """
 import os
+from pathlib import Path
 import smtplib
 import typing as t
 from email.message import EmailMessage
@@ -13,7 +14,7 @@ from flask import render_template
 from rq.registry import StartedJobRegistry
 
 from cagecat import q, r
-from cagecat.const import hmm_database_organisms
+from cagecat.const import hmm_database_kingdoms
 from cagecat.db_utils import fetch_statistic_from_db
 from config_files.config import email_footer_msg, finished_hmm_db_folder, send_mail
 from config_files.notifications import notifications
@@ -110,21 +111,18 @@ def get_server_info(queue: rq.Queue = None, redis_conn: redis.Redis = None) \
 def list_available_hmm_databases():
     all_databases = {}
 
-    for organism_folder in os.listdir(finished_hmm_db_folder):
+    for kingdom_folder in finished_hmm_db_folder.iterdir():
         genera = set()
-        if organism_folder == 'logs':
+        kingdom = kingdom_folder.stem
+        if kingdom == 'logs':
             continue
-
-        if organism_folder not in hmm_database_organisms:
+        elif kingdom not in hmm_database_kingdoms:
             return 'Incorrect organism folder in HMM databases'
 
-        organism_path = os.path.join(finished_hmm_db_folder, organism_folder)
-        for file in os.listdir(organism_path):
-            genus = file.split('.')[0]
+        for genus_folder in kingdom_folder.iterdir():
+            genera.add(genus_folder.stem)
 
-            genera.add(genus)
-
-        all_databases[organism_folder.capitalize()] = sorted(list(genera))
+        all_databases[kingdom.capitalize()] = sorted(list(genera))
 
     return all_databases
 

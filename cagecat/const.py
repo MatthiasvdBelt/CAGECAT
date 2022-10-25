@@ -14,7 +14,7 @@ fasta_extensions = (".fa", ".fsa", ".fna", ".fasta", ".faa")
 genbank_extensions = (".gbk", ".gb", ".genbank", ".gbf", ".gbff")
 
 submit_url = "/submit_job"
-hmm_database_organisms = ('bacteria', 'fungi')
+hmm_database_kingdoms = ('bacteria', 'fungi')
 
 clust_number_with_score_pattern = r"\(Cluster (\d+), score: \d+\.\d+\)"
 clust_number_without_score_pattern = r"\(Cluster (\d+)"

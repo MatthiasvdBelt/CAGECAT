@@ -2,6 +2,8 @@
 
 Author: Matthias van den Belt
 """
+from pathlib import Path
+
 from config_files.sensitive import csrf_key
 
 cagecat_version = '1.0'
@@ -34,7 +36,7 @@ The CAGECAT team
 maintenance_logs = '/process_logs/maintenance'
 server_prefix = '/repo'
 sanitized_folder = '/sanitization'
-finished_hmm_db_folder = '/hmm_databases'
+finished_hmm_db_folder = Path('/hmm_databases')
 pfam_db_folder = '/pfam_db'
 hmm_db_genome_downloads = '/hmm_db_downloads'
 
