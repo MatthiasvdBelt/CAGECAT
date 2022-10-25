@@ -4,6 +4,7 @@ Author: Matthias van den Belt
 """
 import os
 import re
+from pathlib import Path
 
 from config_files.config import thresholds
 
@@ -19,7 +20,8 @@ hmm_database_kingdoms = ('bacteria', 'fungi')
 clust_number_with_score_pattern = r"\(Cluster (\d+), score: \d+\.\d+\)"
 clust_number_without_score_pattern = r"\(Cluster (\d+)"
 clust_number_with_clinker_score_pattern = r"\(Cluster (\d+), \d+\.\d+ score\)"
-jobs_dir = os.path.join("cagecat", "jobs")
+
+jobs_dir = Path("cagecat", "jobs")
 folders_to_create = ["uploads", "results", "logs"]
 
 connection_error_user_friendly_message = 'A connection error between CAGECAT and NCBI occurred. The NCBI servers are probably experiencing difficulties processing our requests. Please try again at a later moment. If this problem persists, please let us know by providing feedback.'

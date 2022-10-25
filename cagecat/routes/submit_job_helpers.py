@@ -69,9 +69,8 @@ def get_previous_job_properties(job_id: str, job_type: str,
     prev_job_id = request.form[f"{module}EnteredJobId"]
     check_valid_job(prev_job_id)
 
-    file_path = os.path.join(jobs_dir, prev_job_id, "results",
-                             f"{prev_job_id}_session.json")
-
+    file_path = jobs_dir / prev_job_id / 'results' / f"{prev_job_id}_session"
+    file_path = file_path.with_suffix('.json')
     return file_path
 
 

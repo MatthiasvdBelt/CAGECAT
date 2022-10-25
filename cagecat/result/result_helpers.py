@@ -26,7 +26,10 @@ def get_failure_reason(job_id: str) -> str:
     """
     msg = None
     try:
-        with open(os.path.join(jobs_dir, job_id, "logs", f"{job_id}.log")) as inf:
+        log_file = jobs_dir / job_id / "logs" / f"{job_id}"
+        log_file = log_file.with_suffix('.log')
+
+        with open(log_file) as inf:
             logs = inf.readlines()
 
         for l in logs:
@@ -75,9 +78,11 @@ def prepare_finished_result(job_id: str,
         - program: the program that was executed by this job
         - size: size of the returned plot in bytes
     """
-    plot_path = os.path.join(jobs_dir, job_id,
-                             "results", f"{job_id}_plot.html")
+    plot_path = jobs_dir / job_id / "results" / f"{job_id}_plot"
+    plot_path = plot_path.with_suffix('.html')
+
     size = None
+    get_size = False
 
     if module == "extract_sequences" or module == "extract_clusters":
         program = "cblaster"
@@ -85,24 +90,24 @@ def prepare_finished_result(job_id: str,
 
     elif module == "search" or module == "recompute" or module == "gne":
         program = "cblaster"
-        with open(plot_path) as inf:
-            plot_contents = inf.read()
-        size = os.path.getsize(plot_path)
+        get_size = True
 
     elif module == "clinker":
         program = "clinker"
-        with open(plot_path) as inf:
-            plot_contents = inf.read()
-        size = os.path.getsize(plot_path)
+        get_size = True
 
     elif module == "clinker_query":
         program = "cblaster"  # as it uses plot_clusters functionality of cblaster
-        with open(plot_path) as inf:
-            plot_contents = inf.read()
-        size = os.path.getsize(plot_path)
+        get_size = True
+
     else:
         raise NotImplementedError(
             f"Module {module} has not been implemented yet in results")
+
+    if get_size:
+        with open(plot_path) as inf:
+            plot_contents = inf.read()
+        size = os.path.getsize(plot_path)
 
     if size is not None:
         if size > size_limit:
