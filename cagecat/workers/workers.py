@@ -330,7 +330,7 @@ def cblaster_extract_clusters(
 def clinker(
         job_id: str,
         options: ImmutableMultiDict = None,
-        file_path: t.Union[str, None] = None) \
+        file_path: t.Union[Path, None] = None) \
         -> None:
     """Executed when requested job is visualization using clinker.
 
@@ -346,6 +346,8 @@ def clinker(
 
     This function forges and executes a clinker command.
     """
+    assert isinstance(file_path, Path)
+
     results_folder = get_job_folder_path(
         job_id=job_id,
         jobs_folder='results'
@@ -360,17 +362,14 @@ def clinker(
 
     try:
         if sanitize_files:
-            for f in os.listdir(file_path):
-                path = os.path.join(file_path, f)
-
-                if path.endswith(
-                        '.zip'):  # indicates we are coming from an extract_clusters job and are going to a clinker job (or the user has uploaded a .zip file)
-                    print('Skipped', path)
+            for file in file_path.iterdir():
+                if file.suffix == '.zip':  # indicates we are coming from an extract_clusters job and are going to a clinker job (or the user has uploaded a .zip file)
+                    print('Skipped', file)
                     continue
-                sanitize_file(path, job_id, remove_old_files=remove_old_files)
+                sanitize_file(file, job_id, remove_old_files=remove_old_files)
 
         exceeded = log_threshold_exceeded(
-            parameter=len(os.listdir(file_path)),
+            parameter=len(list(file_path.iterdir())),  # should be in list as it actually returns a generator
             threshold=thresholds['max_clusters_to_plot'],
             job_id=job_id,
             error_message='Too many selected clusters'
@@ -380,7 +379,7 @@ def clinker(
             return
 
         cmd = [
-            "clinker", file_path,
+            "clinker", file_path.as_posix(),
             "--jobs", "2",
             "--session", Path(results_folder / f"{job_id}_session.json").as_posix(),
             "--output", Path(results_folder / "alignments.txt").as_posix(),

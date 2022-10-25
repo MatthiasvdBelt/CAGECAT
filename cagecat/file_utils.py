@@ -37,7 +37,7 @@ def generate_filepath(
         suffix: str,
         extension: str,
         return_absolute_path: bool,
-        override_filename: str = None):
+        override_filename: str = None) -> Path:
 
     assert override_filename is None or type(override_filename) == str
     assert type(return_absolute_path) == bool

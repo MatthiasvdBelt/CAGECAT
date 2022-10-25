@@ -2,6 +2,7 @@
 
 Author: Matthias van den Belt
 """
+from pathlib import Path
 
 import cagecat.workers.workers as w
 from cagecat import app
@@ -39,7 +40,10 @@ class CAGECATJob:
 
         self.job_id = job_id
         self.options = options
+
+        assert isinstance(file_path, Path)
         self.file_path = file_path
+
         self.depends_on_job_id = depends_on_job_id
 
         self.title = options['job_title'] if 'job_title' in options else ''

@@ -459,23 +459,23 @@ def remove_email_from_db(db_job: Job):
         db_job.email = '-'
 
 
-def sanitize_file(file_path, job_id, remove_old_files=False):
+def sanitize_file(file_path: Path, job_id, remove_old_files=False):
     """Sanitizes input file by piping it through antiSmash
 
     Called when preparing a cblaster search
 
     Returns file path of sanitized file to be used in the cblaster search analysis
     """
+    assert isinstance(file_path, Path)
+
     print('Sanitizing ', file_path)
     sanitization_cmd_base = 'antismash --minimal --output-dir {} --minlength -1 --output-basename {} --genefinding-tool prodigal {}'
 
     # detect input type (NT FASTA / protein FASTA / GBK)
     # extension = f".{file_path.split('.')[-1]}"
-    extension = Path(file_path).suffix
-
     write_to_log_file(job_id, text='-- Executing input file sanitization')
 
-    if extension in fasta_extensions:
+    if file_path.suffix in fasta_extensions:
         # determine what type of FASTA it is.
         with open(file_path) as handle:
             for header, sequence in SimpleFastaParser(handle):
@@ -501,7 +501,7 @@ def sanitize_file(file_path, job_id, remove_old_files=False):
             pass
         else:
             raise IOError('Incorrect FASTA file type')
-    elif extension in genbank_extensions:
+    elif file_path.suffix in genbank_extensions:
         pass
         # check if input file is not accidentally a GenPept file
         # this will fail if it is an incorrectly formatted file, so skip it for now
@@ -515,7 +515,7 @@ def sanitize_file(file_path, job_id, remove_old_files=False):
         #         raise IOError('At least one record in the input file is a protein sequence which is not supported. GenBank (nucleotide sequences), nucleotide FASTA and protein FASTA are supported inputs.')
 
     else:
-        raise IOError('Invalid extension found:', extension, f'(from file) {file_path}')
+        raise IOError('Invalid extension found:', file_path.suffix, f'(from file) {file_path}')
 
     # situations: nt FASTA, GenBank file
 
@@ -526,7 +526,7 @@ def sanitize_file(file_path, job_id, remove_old_files=False):
     cmd = sanitization_cmd_base.format(
         sanitization_folder.as_posix(),
         job_id,
-        file_path
+        file_path.as_posix()
     )
 
     return_code = run_command(
@@ -548,10 +548,12 @@ def sanitize_file(file_path, job_id, remove_old_files=False):
     )
 
     if remove_old_files:
-        os.remove(file_path)
+        file_path.unlink()
         print('Removed', file_path)
 
-    sanitized_fn = sanitization_folder / f'{job_id}.gbk'
+    sanitized_fn = sanitization_folder / f'{job_id}'
+    sanitized_fn = sanitized_fn.with_suffix('.gbk')
+
     destination = generate_filepath(
         job_id=job_id,
         jobs_folder='uploads',
@@ -562,10 +564,10 @@ def sanitize_file(file_path, job_id, remove_old_files=False):
 
     # for case when multiple files are uploaded (clinker)
     num = 1
-    if os.path.exists(destination):
+    if destination.exists():
         destination = generate_clinker_upload_fp(job_id, num)
 
-        while os.path.exists(destination):
+        while destination.exists():
             num += 1
             destination = generate_clinker_upload_fp(job_id, num)
 
