@@ -23,7 +23,10 @@ def read_headers(job_id: str) -> t.List[str]:
         - headers: the query headers of this job ID
     """
     try:
-        with open(os.path.join(jobs_dir, job_id, "logs", "query_headers.csv")) as outf:
+        query_headers_fn = jobs_dir / job_id / 'logs' / 'query_headers'
+        query_headers_fn = query_headers_fn.with_suffix('.csv')
+
+        with open(query_headers_fn) as outf:
             headers = outf.read().strip().split(",")
     except FileNotFoundError:  # indicates the given job id does not have query_headers
         headers = []

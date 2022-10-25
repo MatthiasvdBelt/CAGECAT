@@ -328,15 +328,17 @@ def forge_database_args(options: ImmutableMultiDict) -> t.List[str]:
     Output:
         - base: appropriate (based on submitted options) argument list
     """
-
     # TODO future: handle recompute scenario as now mode is always given as remote, which is not always the case. The search type should be fetched from the initial search job
     base = ['--database']
     if options['mode'] in ('hmm', 'combi_remote'):
         splitted = options["selectedGenus"].split('_')
-        organism = splitted[0].lower()
-        genus_fasta = f'{splitted[1]}.fasta'
+        kingdom = splitted[0].lower()
+        genus = splitted[1]
 
-        base.append(os.path.join(finished_hmm_db_folder, organism, genus_fasta))
+        db_path = finished_hmm_db_folder / kingdom / genus
+        db_path = db_path.with_suffix('.fasta')
+
+        base.append(db_path.as_posix())
 
     if options['mode'] in ('remote', 'combi_remote'):
         if 'database_type' in options:
@@ -519,10 +521,8 @@ def sanitize_file(file_path: Path, job_id, remove_old_files=False):
 
     # situations: nt FASTA, GenBank file
 
-    # # print('before actual sanitization')
     sanitization_folder = generate_sanitization_filepath(job_id=job_id)
 
-    # cmd = sanitization_cmd_base.format(sanitized_folder, job_id, os.path.join(os.getcwd(), file_path))
     cmd = sanitization_cmd_base.format(
         sanitization_folder.as_posix(),
         job_id,

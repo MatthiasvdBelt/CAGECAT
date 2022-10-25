@@ -107,7 +107,7 @@ def prepare_finished_result(job_id: str,
     if get_size:
         with open(plot_path) as inf:
             plot_contents = inf.read()
-        size = os.path.getsize(plot_path)
+        size = os.path.getsize(plot_path)  # intentionally with os module
 
     if size is not None:
         if size > size_limit:

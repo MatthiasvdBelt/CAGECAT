@@ -255,8 +255,7 @@ def save_file(file_obj: werkzeug.datastructures.FileStorage,
     fn = werkzeug.utils.secure_filename(file_obj.filename)
     if fn:
         create_directories(job_id)
-        file_path = os.path.join(f"{jobs_dir}", job_id,
-                                 "uploads", fn)
+        file_path = jobs_dir / job_id / 'uploads' / fn
         file_obj.save(file_path)
     else:
         raise IOError('Securing filename led to an empty filename')
@@ -274,13 +273,11 @@ def create_directories(job_id: str) -> None:
         - None
         - Created directories
     """
-    base_path = os.path.join(jobs_dir, job_id)
+    base_path = jobs_dir / job_id
 
-    if not os.path.exists(base_path): # directories are attempted to
-        # be created again when jobs depending on each other are executed
-        os.mkdir(base_path)
-        for folder in folders_to_create:
-            os.mkdir(os.path.join(base_path, folder))
+    for folder in folders_to_create:
+        folder_path = base_path / folder
+        folder_path.mkdir(parents=True, exist_ok=True)
 
 
 def save_settings(options: werkzeug.datastructures.ImmutableMultiDict,
@@ -298,9 +295,10 @@ def save_settings(options: werkzeug.datastructures.ImmutableMultiDict,
     Function created for logging purposes. Writes to a file, which will be
     used by the [load_settings] function.
     """
-    with open(f"{os.path.join(jobs_dir, job_id, 'logs', job_id)}"
-              f"_options.txt", "w") as outf:
+    settings_fn = jobs_dir / job_id / 'logs' / f'{job_id}_options'
+    settings_fn = settings_fn.with_suffix('.txt')
 
+    with open(settings_fn, "w") as outf:
         for key, value in options.items():
             if type(value) == str:
                 if "\r\n" in value:
