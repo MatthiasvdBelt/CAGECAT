@@ -288,3 +288,11 @@ def get_plot_contents(job_id) -> str:
 
     resp.headers['NO-CSP'] = 1
     return resp
+
+@result.route("/log/<job_id>")
+def get_job_log(job_id) -> str:
+    job = fetch_job_from_db(job_id)
+    if job is None:
+        return show_template("job_not_found.html", job_id=job_id)
+
+    return get_log_file_contents(job_id)

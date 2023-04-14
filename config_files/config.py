@@ -18,7 +18,7 @@ NCBI_ftp_base_url = 'ftp.ncbi.nlm.nih.gov'
 thresholds = {
     'maximum_clusters_to_extract': 150,
     'maximum_gne_samples': 300,
-    'max_clusters_to_plot': 75,
+    'max_clusters_to_plot': 50,
 }
 
 email_footer_msg = f'''Thank you for using our service. 

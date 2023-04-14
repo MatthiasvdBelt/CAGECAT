@@ -370,7 +370,7 @@ def clinker(
                 sanitize_file(path, job_id, remove_old_files=remove_old_files)
 
         exceeded = log_threshold_exceeded(
-            parameter=len(os.listdir(file_path)),
+            parameter=len([z for z in os.listdir(file_path) if not z.endswith('.zip')]),
             threshold=thresholds['max_clusters_to_plot'],
             job_id=job_id,
             error_message='Too many selected clusters'

@@ -63,7 +63,7 @@ def cblaster_search(prev_run_id: str = None) -> str:
         module_to_show = None
         show_examples = 'cblaster_search'
 
-    form = CblasterSearchForm()
+    form = CblasterSearchForm(formdata=None)
     form.base.clustering.requiredSequencesSelector.choices = query_headers
 
     if module_to_show == 'recompute':
@@ -94,7 +94,7 @@ def clinker_query() -> str:
         request.form["selectedClusters"], clust_number_with_score_pattern)
 
     return show_template("cblaster_plot_clusters.html",
-                         all_forms=CblasterVisualisationForm(),
+                         all_forms=CblasterVisualisationForm(formdata=None),
                          prev_job_id=request.form["job_id"],
                          cluster_headers=
                          request.form["selectedClusters"].split('\r\n'),
@@ -122,7 +122,7 @@ def extract_sequences() -> str:
         form = CblasterExtractSequencesFormHMM()
         show_download = False
     else:
-        form = CblasterExtractSequencesForm()
+        form = CblasterExtractSequencesForm(formdata=None)
         show_download = True
 
     return show_template(
@@ -158,7 +158,7 @@ def extract_clusters() -> str:
 
     return show_template("cblaster_extract_clusters.html",
                          # selected_scaffolds=selected_scaffolds,
-                         all_forms=CblasterExtractClustersForm(),
+                         all_forms=CblasterExtractClustersForm(formdata=None),
                          cluster_headers=selected_clusters.split('\r\n'),
                          cluster_numbers=cluster_numbers,
                          prev_job_id=prev_job_id, prev_job_type=prev_job.job_type,
@@ -169,7 +169,7 @@ def extract_clusters() -> str:
 @tools.route('/gne', methods=['GET', 'POST'])
 def gene_neighbourhood_estimation() -> str:
     return show_template('cblaster_gene_neighbourhood_estimation.html',
-                         all_forms=CblasterGNEForm(),
+                         all_forms=CblasterGNEForm(formdata=None),
                          max_samples=thresholds['maximum_gne_samples'],
                          prev_job_id=request.form['job_id'])
 
@@ -179,9 +179,9 @@ def clinker() -> str:
     prev_job_id = None if 'job_id' not in request.form else request.form['job_id']
 
     if prev_job_id is None:
-        form = ClinkerInitialForm()
+        form = ClinkerInitialForm(formdata=None)
     else:
-        form = ClinkerDownstreamForm()
+        form = ClinkerDownstreamForm(formdata=None)
 
     scripts = ['addAccordionListeners()']
     if request.method == 'GET':
@@ -193,6 +193,6 @@ def clinker() -> str:
     return show_template('clinker.html',
                          all_forms=form,
                          query_file_extensions=','.join(genbank_extensions),
-                         show_examples=show_examples,
+                         show_examples=show_examples, thresholds=thresholds,
                          prev_job_id=prev_job_id,
                          scripts_to_execute=';'.join(scripts))

@@ -250,6 +250,13 @@ def submit_job() -> str:
 
             if fetch_job_from_db(prev_job_id).job_type == 'extract_clusters':
                 genome_files_path = os.path.join(jobs_dir, prev_job_id, "results")
+                cluster_number = len(os.listdir(genome_files_path))
+                # check if exceeds
+                if cluster_number > thresholds['max_clusters_to_plot']:
+                    # can be a redirect. now the url remains /submit_job
+                    return show_template('clinker_too_many_clusters.html',
+                                         cluster_number=cluster_number,
+                                         cluster_threshold=thresholds['max_clusters_to_plot'])
                 depending_on = None
             else:
                 # below is a check if detected cluster count does not exceed the plotting limit
@@ -289,7 +296,13 @@ def submit_job() -> str:
             errors = validate_full_form(ClinkerInitialForm, request.form)
             if errors:
                 return show_invalid_submission(errors)
-
+                # check if exceeds
+            cluster_number = len(request.files.getlist('fileUploadClinker'))
+            if cluster_number > thresholds['max_clusters_to_plot']:
+                # can be a redirect. now the url remains /submit_job
+                return show_template('clinker_too_many_clusters.html',
+                                         cluster_number=cluster_number,
+                                     cluster_threshold=thresholds['max_clusters_to_plot'])
             for f in request.files.getlist('fileUploadClinker'):
                 if f.filename:
                     save_file(f, job_id)

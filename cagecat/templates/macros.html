@@ -44,10 +44,10 @@
 {% macro showNavigationBar(page)  %}
     <div id="navigationBar">
     <ul class="nav">
-        <li><a {{ '' if page != 'home' else 'class=active' }} href="{{url_for('home_page')}}">Home</a></li>
-        <li><a {{ '' if page != 'analyze' else 'class=active' }} href="{{ url_for('tools.tools_explanation') }}">Analyze</a></li>
+        <li><a {{ '' if page != 'home' else 'class=active' }} href="{{url_for('home_page')}}">Analyze</a></li>
         <li><a {{ '' if page != 'results' else 'class=active' }} href="{{url_for('result.result_from_job_id')}}">Results</a></li>
         <li class="right-nav"><a {{ '' if page != 'help' else 'class=active' }} href="{{ url_for('help_page') }}">Contact / Help</a></li>
+        <li class="right-nav"><a {{ '' if page != 'analyze' else 'class=active' }} href="{{ url_for('tools.tools_explanation') }}">Explanations</a></li>
         <li class="right-nav"><a {{ '' if page != 'tools' else 'class=active' }} href="{{ url_for('tools.tools_page') }}">Available tools</a></li>
         <li class="right-nav"><a {{ '' if page != 'tutorial' else 'class=active' }} href="{{ url_for('tutorial') }}">Tutorial</a></li>
     </ul>

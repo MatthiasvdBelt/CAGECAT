@@ -10,72 +10,98 @@ class GeneralForm(Form):
     """Has job info and submit input fields
 
     """
-    job_info = JobInfoForm()
-    submit = SubmitForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.job_info = JobInfoForm()
+        self.submit = SubmitForm()
 
 class CblasterSearchBaseForm(Form):
-    general = GeneralForm()
-    clustering = ClusteringSectionForm()
-    summary_table = SummaryTableForm()
-    binary_table = BinaryTableForm()
-    additional_options = AdditionalOptionsSectionForm()
-    intermediate_genes = IntermediateGenesSectionForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.clustering = ClusteringSectionForm()
+        self.summary_table = SummaryTableForm()
+        self.binary_table = BinaryTableForm()
+        self.additional_options = AdditionalOptionsSectionForm()
+        self.intermediate_genes = IntermediateGenesSectionForm()
 
 class CblasterSearchForm(Form):  # TODO: refactor to CblasterSearchRemoteForm
-    base = CblasterSearchBaseForm()
-    search = SearchSectionForm()
-    filtering = FilteringSectionForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.base = CblasterSearchBaseForm()
+        self.search = SearchSectionForm()
+        self.filtering = FilteringSectionForm()
     # TODO:
     #  input = InputSectionForm()
     # search_modes = InputSearchModeForm()
     # remote_type = InputRemoteTypeForm()
-    remote_input_types_file = InputSearchRemoteInputTypeFile()
-    remote_input_types_ncbi_entries = InputSearchRemoteInputTypeNCBIEntries()
-    hmm = InputHMMForm()
+        self.remote_input_types_file = InputSearchRemoteInputTypeFile()
+        self.remote_input_types_ncbi_entries = InputSearchRemoteInputTypeNCBIEntries()
+        self.hmm = InputHMMForm()
 
 class CblasterSearchHMMForm(Form):
-    base = CblasterSearchBaseForm()
-    hmm = InputHMMForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.base = CblasterSearchBaseForm()
+        self.hmm = InputHMMForm()
 
 
 class CblasterRecomputeForm(Form):
-    base = CblasterSearchBaseForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.base = CblasterSearchBaseForm()
 
 class CblasterGNEForm(Form):
-    general = GeneralForm()
-    summary_table = SummaryTableGNEForm()
-    additional_options = AdditionalOptionsGNEForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.summary_table = SummaryTableGNEForm()
+        self.additional_options = AdditionalOptionsGNEForm()
 
 class CblasterExtractSequencesForm(Form):
-    general = GeneralForm()
-    filtering = ExtractSequencesFilteringForm()
-    output = ExtractSequencesOutputForm()
-    download = ExtractSequencesDownloadSequencesForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.filtering = ExtractSequencesFilteringForm()
+        self.output = ExtractSequencesOutputForm()
+        self.download = ExtractSequencesDownloadSequencesForm()
 
 class CblasterExtractSequencesFormHMM(Form):
-    general = GeneralForm()
-    filtering = ExtractSequencesFilteringForm()
-    output = ExtractSequencesOutputForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.filtering = ExtractSequencesFilteringForm()
+        self.output = ExtractSequencesOutputForm()
 
 class CblasterExtractClustersForm(Form):
-    general = GeneralForm()
-    filtering = ClustersFilteringForm()
-    output = ExtractClustersOutputForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.filtering = ClustersFilteringForm()
+        self.output = ExtractClustersOutputForm()
 
 class CblasterVisualisationForm(Form):
-    general = GeneralForm()
-    filtering = ClustersFilteringForm()
-    output = CblasterVisualisationOutputForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.filtering = ClustersFilteringForm()
+        self.output = CblasterVisualisationOutputForm()
 
 class ClinkerBaseForm(Form):
-    general = GeneralForm()
-    alignment = ClinkerAlignmentForm()
-    output = ClinkerOutputForm()
-    additional_options = ClinkerAdditionalOptionsForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.general = GeneralForm()
+        self.alignment = ClinkerAlignmentForm()
+        self.output = ClinkerOutputForm()
+        self.additional_options = ClinkerAdditionalOptionsForm()
 
 class ClinkerDownstreamForm(Form):
-    base = ClinkerBaseForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.base = ClinkerBaseForm()
 
 class ClinkerInitialForm(Form):
-    base = ClinkerBaseForm()
-    input = ClinkerInputForm()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.base = ClinkerBaseForm()
+        self.input = ClinkerInputForm()

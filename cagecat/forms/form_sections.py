@@ -14,6 +14,7 @@ from wtforms import Form, validators as val
 # description equals the corresponding help text word
 from cagecat.const import genbank_extensions, fasta_extensions
 from cagecat.forms.valid_input_cblaster import is_safe_string_value
+from config_files.config import thresholds
 
 cblaster_search_search_modes = [
     'remote',
@@ -500,9 +501,9 @@ class ExtractClustersOutputForm(Form):
 
     maxclusters = IntegerField(
         label=u'Maximum clusters',
-        validators=[is_safe_string_value, val.number_range(min=1, max=150), val.input_required()],
+        validators=[is_safe_string_value, val.number_range(min=1, max=thresholds['maximum_clusters_to_extract']), val.input_required()],
         description='maxclusters',
-        default=50,
+        default=thresholds['maximum_clusters_to_extract'],
         render_kw={
             'class': 'short',
             'step': 1
@@ -512,9 +513,9 @@ class ExtractClustersOutputForm(Form):
 class CblasterVisualisationOutputForm(Form):
     maxclusters = IntegerField(
         label=u'Maximum clusters',
-        validators=[is_safe_string_value, val.number_range(min=1, max=75), val.input_required()],
+        validators=[is_safe_string_value, val.number_range(min=1, max=thresholds['max_clusters_to_plot']), val.input_required()],
         description='maxclusters',
-        default=50,
+        default=thresholds['max_clusters_to_plot'],
         render_kw={
             'class': 'short',
             'step': 1

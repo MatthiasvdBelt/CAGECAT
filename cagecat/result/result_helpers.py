@@ -47,9 +47,12 @@ def get_failure_reason(job_id: str) -> str:
     except FileNotFoundError:
         msg = 'No log file was found for your analysis. The developers have been notified to investigate your scenario.'
 
+    base = 'https://cagecat.bioinformatics.nl/results'
     send_email(
         subject=f'{job_id} failed with an unknown reason',
-        message=f'The job {job_id} failed with an unknown reason and should be investigated.\n',
+        message=f'The job {job_id} failed with an unknown reason and should be investigated.\n\nLinks: '
+                f'{base}/download/{job_id}\n'
+                f'{base}/log/{job_id}\n',
         receiving_email=sender_email
     )
 
